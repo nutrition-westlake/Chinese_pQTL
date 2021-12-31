@@ -1,1 +1,179 @@
-test
+###############################Quality control of proteome analysis###############################
+library(dplyr)
+prot<-read.csv("GNHS_prot20201127.csv",header=T)
+sampleid<-read.csv("sampleid.csv")
+names(prot)[1]<-"patient_ID"
+
+prot2<-merge(sampleid,prot,by="patient_ID")
+t<-names(prot2)
+s1<-first protein
+e1<-last protein
+prot2$na<-0
+
+f<-function(x) (e1-s1+1)-sum(is.na(x))
+prot2$na<-apply(prot2[,s1:e1], 1, f)
+hist(prot2$na)
+prot3<-prot2[prot2$na>median(prot2$na)*0.8,]
+
+
+p1<-prot3[prot3$phase==1,]
+a<-data.frame(t(p1[,s1:e1]))
+corm<-cor(a,a,use="complete.obs","pearson")
+length(corm)
+id<-unique(p1$SampleID)
+p1$keep<-0
+for(i in 1:length(id)){
+  ids<-paste0("^",id[i],"$")
+  s<-grep(ids,p1$SampleID)
+  num<-0
+  if(length(s)>1){
+    for (m in 1:(length(s)-1)) {
+      for (n in (m+1):length(s)) {
+        if(corm[s[m],s[n]] >= 0.8){
+          p1$keep[s[m]]<-1
+          p1$keep[s[n]]<-1
+          num<-num+1
+        }
+          
+      }
+    }
+  }
+  if(length(s)<2) {
+    p1$keep[s[1]]<-1 }
+  if(length(s)>1 && num==0){ 
+    max<-max(p1$na[s])
+    p1$keep[s[which(p1$na[s]==max,T)]]<-2}
+}
+table(p1$keep)
+p11<-p1[p1$keep>0,]
+length(unique(p11$SampleID))==length(unique(p1$SampleID))
+f2<-function(x) mean(x,na.rm=T)
+p12<-group_by(p11, SampleID) %>% summarize_each(f2, t[s1:e1])
+p12$phase<-"phase1"
+
+p2<-prot3[prot3$phase==2,]
+a<-data.frame(t(p2[,s1:e1]))
+corm<-cor(a,a,use="complete.obs","pearson")
+length(corm)
+id<-unique(p2$SampleID)
+p2$keep<-0
+for(i in 1:length(id)){
+  ids<-paste0("^",id[i],"$")
+  s<-grep(ids,p2$SampleID)
+  num<-0
+  if(length(s)>1){
+    for (m in 1:(length(s)-1)) {
+      for (n in (m+1):length(s)) {
+        if(corm[s[m],s[n]] >= 0.8){
+          p2$keep[s[m]]<-1
+          p2$keep[s[n]]<-1
+          num<-num+1
+        }
+        
+      }
+    }
+  }
+  if(length(s)<2) {
+    p2$keep[s[1]]<-1 }
+  if(length(s)>1 && num==0){ 
+    max<-max(p2$na[s])
+    p2$keep[s[which(p2$na[s]==max,T)]]<-2}
+}
+table(p2$keep)
+p21<-p2[p2$keep>0,]
+length(unique(p21$SampleID))==length(unique(p2$SampleID))
+f2<-function(x) mean(x,na.rm=T)
+p22<-group_by(p21, SampleID) %>% summarize_each(f2, t[s1:e1])
+p22$phase<-"phase2"
+
+p3<-prot3[prot3$phase==3,]
+a<-data.frame(t(p3[,s1:e1]))
+corm<-cor(a,a,use="complete.obs","pearson")
+length(corm)
+id<-unique(p3$SampleID)
+p3$keep<-0
+for(i in 1:length(id)){
+  ids<-paste0("^",id[i],"$")
+  s<-grep(ids,p3$SampleID)
+  num<-0
+  if(length(s)>1){
+    for (m in 1:(length(s)-1)) {
+      for (n in (m+1):length(s)) {
+        if(corm[s[m],s[n]] >= 0.8){
+          p3$keep[s[m]]<-1
+          p3$keep[s[n]]<-1
+          num<-num+1
+        }
+        
+      }
+    }
+  }
+  if(length(s)<2) {
+    p3$keep[s[1]]<-1 }
+  if(length(s)>1 && num==0){ 
+    max<-max(p3$na[s])
+    p3$keep[s[which(p3$na[s]==max,T)]]<-2}
+}
+table(p3$keep)
+p31<-p3[p3$keep>0,]
+length(unique(p31$SampleID))==length(unique(p3$SampleID))
+f2<-function(x) mean(x,na.rm=T)
+p32<-group_by(p31, SampleID) %>% summarize_each(f2, t[s1:e1])
+p32$phase<-"phase2"
+
+p4<-prot3[prot3$phase==4,]
+a<-data.frame(t(p4[,s1:e1]))
+corm<-cor(a,a,use="complete.obs","pearson")
+length(corm)
+id<-unique(p4$SampleID)
+p4$keep<-0
+for(i in 1:length(id)){
+  ids<-paste0("^",id[i],"$")
+  s<-grep(ids,p4$SampleID)
+  num<-0
+  if(length(s)>1){
+    for (m in 1:(length(s)-1)) {
+      for (n in (m+1):length(s)) {
+        if(corm[s[m],s[n]] >= 0.8){
+          p4$keep[s[m]]<-1
+          p4$keep[s[n]]<-1
+          num<-num+1
+        }
+        
+      }
+    }
+  }
+  if(length(s)<2) {
+    p4$keep[s[1]]<-1 }
+  if(length(s)>1 && num==0){ 
+    max<-max(p4$na[s])
+    p4$keep[s[which(p4$na[s]==max,T)]]<-2}
+}
+table(p4$keep)
+p41<-p4[p4$keep>0,]
+length(unique(p41$SampleID))==length(unique(p4$SampleID))
+f2<-function(x) mean(x,na.rm=T)
+p42<-group_by(p41, SampleID) %>% summarize_each(f2, t[s1:e1])
+p42$phase<-"phase3"
+
+new_data<-rbind(p12,p22,p32,p42)
+
+###############################Input file for GWAS analysis###############################
+t<-names(data)
+start<-first protein
+end<-last protein
+for(i in start:end){
+  aa<-min(data[,i],na.rm=T)
+  data[,i][is.na(data[,i])]<-aa/2
+  data[,i]<-qnorm((rank(data[,i],na.last="keep")-0.5)/sum(!is.na(data[,i])))
+}
+
+
+for(i in start:end){
+  mydata<-data.frame(data$SampleID.x,data$SampleID.x,data[,i])
+  write.table(mydata,paste(i+8,"txt",sep="."),row.names =F, col.names =T, quote =F)
+}
+qcovar<-data.frame(data$SampleID.x,data$SampleID.x,data$age_c,data$PC1,data$PC2,data$PC3,data$PC4,data$PC5)
+write.table(qcovar,"qcovar.txt",row.names =F, col.names =F, quote =F)
+covar<-data.frame(data$SampleID.x,data$SampleID.x,data$sex)
+write.table(covar,"covar.txt",row.names =F, col.names =F, quote =F)
