@@ -1,3 +1,4 @@
+#R 3.5.2
 ###############################Quality control of proteome analysis###############################
 library(dplyr)
 prot<-read.csv("GNHS_prot20201127.csv",header=T)
