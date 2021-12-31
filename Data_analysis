@@ -119,7 +119,7 @@ p31<-p3[p3$keep>0,]
 length(unique(p31$SampleID))==length(unique(p3$SampleID))
 f2<-function(x) mean(x,na.rm=T)
 p32<-group_by(p31, SampleID) %>% summarize_each(f2, t[s1:e1])
-p32$phase<-"phase2"
+p32$phase<-"phase3"
 
 p4<-prot3[prot3$phase==4,]
 a<-data.frame(t(p4[,s1:e1]))
@@ -154,7 +154,7 @@ p41<-p4[p4$keep>0,]
 length(unique(p41$SampleID))==length(unique(p4$SampleID))
 f2<-function(x) mean(x,na.rm=T)
 p42<-group_by(p41, SampleID) %>% summarize_each(f2, t[s1:e1])
-p42$phase<-"phase3"
+p42$phase<-"phase4"
 
 new_data<-rbind(p12,p22,p32,p42)
 
