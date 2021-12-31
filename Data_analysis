@@ -15,7 +15,6 @@ prot2$na<-apply(prot2[,s1:e1], 1, f)
 hist(prot2$na)
 prot3<-prot2[prot2$na>median(prot2$na)*0.8,]
 
-
 p1<-prot3[prot3$phase==1,]
 a<-data.frame(t(p1[,s1:e1]))
 corm<-cor(a,a,use="complete.obs","pearson")
@@ -158,7 +157,9 @@ p42$phase<-"phase3"
 
 new_data<-rbind(p12,p22,p32,p42)
 
-###############################Input file for GWAS analysis###############################
+
+
+###############################Input files for GWAS analysis###############################
 t<-names(data)
 start<-first protein
 end<-last protein
@@ -167,7 +168,6 @@ for(i in start:end){
   data[,i][is.na(data[,i])]<-aa/2
   data[,i]<-qnorm((rank(data[,i],na.last="keep")-0.5)/sum(!is.na(data[,i])))
 }
-
 
 for(i in start:end){
   mydata<-data.frame(data$SampleID.x,data$SampleID.x,data[,i])
